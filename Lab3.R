@@ -297,6 +297,15 @@ sep_data$hypopituitary <- NULL
 sep_data$referral_source<-NULL
 #sep_data$class <- NULL
 
+# -------------------------------------------------------------------
+#             Unión de las clases con muy bajo % de representatividad
+
+
+sep_data$class[sep_data$class == "T3 toxic"] <- "positive"
+sep_data$class[sep_data$class == "goitre"] <- "positive"
+sep_data$class[sep_data$class == "hyperthyroid"] <- "positive"
+
+
 
 # -------------------------------------------------------------------
 #             Detección  y tratamiento de datos faltantes 
@@ -426,10 +435,9 @@ sep_data$TT4[sep_data$TT4 > 220] <- median(sep_data$TT4)
 sep_data$FTI[sep_data$FTI > 200] <- median(sep_data$FTI)
 
 
-#Se utilizará para calcular Gower
-sep_data_factors <- sep_data
-sep_data_factors$T3 <- as.numeric(as.character(sep_data_factors$T3))
+#Se dejan todas las variables discretas como factores
 
+sep_data_factors <- sep_data
 sep_data_factors$sex <- as.factor(sep_data_factors$sex)
 sep_data_factors$on_thyroxine <- as.factor(sep_data_factors$on_thyroxine)
 sep_data_factors$query_on_thyroxine <- as.factor(sep_data_factors$query_on_thyroxine)
@@ -450,23 +458,23 @@ sep_data_factors$class <- as.factor(sep_data_factors$class)
 # -------------------------------------------------------------------
 #             Discretización de los datos
 
-age = c(-Inf,11,26,59,Inf)
+age = c(0,11,26,59,Inf)
 age.names = c("Infancy","Youth","Adulthood","Eld")
 
 TSH = c(-Inf, 0.4, 4.5, Inf)
-TSH.names = c("Low","Normal","Hight")
+TSH.names = c("Low","Normal","High")
 
 T3 = c(-Inf, 0.92, 2.76, Inf)
-T3.names = c("Low","Normal","Hight")
+T3.names = c("Low","Normal","High")
 
 TT4 = c(-Inf, 54, 115, Inf)
-TT4.names = c("Low","Normal","Hight")
+TT4.names = c("Low","Normal","High")
 
 T4U = c(-Inf, 0.71, 1.85, Inf)
-T4U.names = c("Low","Normal","Hight")
+T4U.names = c("Low","Normal","High")
 
 FTI = c(-Inf, 45, 117, Inf)
-FTI.names = c("Low","Normal","Hight")
+FTI.names = c("Low","Normal","High")
 
 
 sep_data_factors$age = cut(sep_data_factors$age, breaks = age, labels = age.names)
@@ -479,15 +487,23 @@ sep_data_factors$FTI = cut(sep_data_factors$FTI, breaks = FTI, labels = FTI.name
 # -------------------------------------------------------------------
 #                           Reglas 
 
+#No existen reglas para clase positiva
+# rules = apriori(
+#   data = sep_data_factors, 
+#   parameter=list(support = 0.2, minlen = 1, maxlen = 20, target="rules"),
+#   appearance=list(rhs = c("class=positive"))
+# )
+
 rules = apriori(
-  data = sep_data_factors, 
-  parameter=list(support = 0.8, minlen = 2, maxlen = 20, target="rules"),
-  appearance=list(rhs = c("class=negative","class=goitre", "class=hyperthyroid", "class=T3 toxic"))
-  
+  data = sep_data_factors,
+  parameter=list(support = 0.2, minlen = 1, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("class=positive"))
 )
 
+sub_rules <- subset(x = rules, subset = lhs %ain% c("age=Eld","TSH=Normal"))
+sub_rules
 
-a <- inspect(sort(x = rules, decreasing = FALSE, by = "confidence"))
+a <- inspect(sort(x = sub_rules, decreasing = FALSE, by = "confidence"))
 
 
 boxplot.age =  ggboxplot(data =sep_data, x = "class", y = "age", color = "class", add = "jitter") + border() 
@@ -520,4 +536,5 @@ ydens = axis_canvas(boxplot.FTI, axis = "y", coord_flip = TRUE) + geom_density(d
 boxplot.FTI = insert_yaxis_grob(boxplot.FTI, ydens, grid::unit(.2, "null"), position = "right")
 ggdraw(boxplot.FTI)
 
+#[1] {query_on_thyroxine=f,TSH=Low} => {class=negative} 0.2004515 0.8809524  0.2275395 0.908854 444  
 
