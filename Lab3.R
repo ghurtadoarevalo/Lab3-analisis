@@ -487,54 +487,159 @@ sep_data_factors$FTI = cut(sep_data_factors$FTI, breaks = FTI, labels = FTI.name
 # -------------------------------------------------------------------
 #                           Reglas 
 
-#No existen reglas para clase positiva
-# rules = apriori(
-#   data = sep_data_factors, 
-#   parameter=list(support = 0.2, minlen = 1, maxlen = 20, target="rules"),
-#   appearance=list(rhs = c("class=positive"))
-# )
-
-rules = apriori(
+# ------------------ Reglas para clase positiva --------------------- 
+# Soporte: 0.01, confidence: 0.2 , Tiempo de procesamiento máx 300 [s]
+positive_rules = apriori(
   data = sep_data_factors,
-  parameter=list(support = 0.2, minlen = 1, maxlen = 20, target="rules"),
+  parameter=list(support = 0.01,confidence = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
   appearance=list(rhs = c("class=positive"))
 )
 
-sub_rules <- subset(x = rules, subset = lhs %ain% c("age=Eld","TSH=Normal"))
-sub_rules
+#Se obtiene la regla con mayor confianza
+sorted_positive_rules_confidence <- sort(x = positive_rules, decreasing = TRUE, by = "confidence")[1]
+#Se obtiene la regla con mayor soporte
+sorted_positive_rules_support <- sort(x = positive_rules, decreasing = TRUE, by = "support")[1]
 
-a <- inspect(sort(x = sub_rules, decreasing = FALSE, by = "confidence"))
+
+#Se muestran la regla con mayor confianza
+inspect(sorted_positive_rules_confidence)
+#Se muestran la regla con mayor soporte
+inspect(sorted_positive_rules_support)
+
+# ------------------ Reglas para clase negativa  --------------------
+# Soporte: 0.8, Tiempo de procesamiento máx 5 [s]
+negative_rules = apriori(
+  data = sep_data_factors,
+  parameter=list(support = 0.8, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("class=negative"))
+  
+)
+
+#Se ordenan las reglas almacenando las 5 con mayor lift
+sorted_negative_rules_decreasing_lift <- sort(x = negative_rules, decreasing = TRUE, by = "lift")[1:5]
+#Se ordenan las reglas almacenando las 5 con menor lift
+sorted_negative_rules_increasing_lift <- sort(x = negative_rules, decreasing = FALSE, by = "lift")[1:5]
+
+#Se muestran las 5 reglas con mayor lift
+inspect(sorted_negative_rules_decreasing_lift)
+#Se muestran las 5 reglas con menor lift
+inspect(sorted_negative_rules_increasing_lift)
 
 
-boxplot.age =  ggboxplot(data =sep_data, x = "class", y = "age", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.age, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.age = insert_yaxis_grob(boxplot.age, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.age)
 
-boxplot.sex =  ggboxplot(data =sep_data, x = "class", y = "sex", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.sex, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.sex = insert_yaxis_grob(boxplot.sex, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.sex)
+# ------------------ Reglas para TSH  --------------------
 
-boxplot.TSH =  ggboxplot(data =sep_data, x = "class", y = "TSH", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.TSH, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.TSH = insert_yaxis_grob(boxplot.TSH, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.TSH)
+############# TSH = Low ############ 
+# Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
+low_TSH_rules = apriori(
+  data = sep_data_factors[1:20],
+  parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("TSH=Low"))
+)
 
-boxplot.T4U =  ggboxplot(data =sep_data, x = "class", y = "T4U", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.T4U, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.T4U = insert_yaxis_grob(boxplot.T4U, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.T4U)
+#Se ordenan las reglas almacenando las 5 con mayor lift
+sorted_low_TSH_rules_lift <- sort(x = low_TSH_rules, decreasing = TRUE, by = "lift")[1:5]
+#Se ordenan las reglas almacenando las 5 con mayor soporte
+sorted_low_TSH_rules_support <- sort(x = low_TSH_rules, decreasing = TRUE, by = "support")[1:5]
 
-boxplot.T3 =  ggboxplot(data =sep_data, x = "class", y = "T3", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.T3, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.T3 = insert_yaxis_grob(boxplot.T3, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.T3)
+#Se muestran las 5 reglas con mayor lift
+inspect(sorted_low_TSH_rules_lift)
+#Se muestran las 5 reglas con mayor soporte
+inspect(sorted_low_TSH_rules_support)
 
-boxplot.FTI =  ggboxplot(data =sep_data, x = "class", y = "FTI", color = "class", add = "jitter") + border() 
-ydens = axis_canvas(boxplot.FTI, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
-boxplot.FTI = insert_yaxis_grob(boxplot.FTI, ydens, grid::unit(.2, "null"), position = "right")
-ggdraw(boxplot.FTI)
+############ TSH = High ############ 
+# Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
+high_TSH_rules = apriori(
+  data = sep_data_factors[1:20],
+  parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("TSH=High"))
+)
+
+#Se ordenan las reglas almacenando la con mayor lift
+sorted_high_TSH_rules_lift <- sort(x = high_TSH_rules, decreasing = TRUE, by = "lift")[1]
+#Se ordenan las reglas almacenando la con mayor soporte
+sorted_high_TSH_rules_support <- sort(x = high_TSH_rules, decreasing = TRUE, by = "support")[1]
+
+#Se muestran la regla con mayor lift
+inspect(sorted_high_TSH_rules_lift)
+#Se muestran la regla con mayor soporte
+inspect(sorted_high_TSH_rules_support)
+
+############ TSH = Normal ############ 
+# Soporte: 0.2, Tiempo de procesamiento máx 300 [s]
+normal_TSH_rules = apriori(
+  data = sep_data_factors[1:20],
+  parameter=list(support = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("TSH=Normal"))
+)
+
+#Se ordenan las reglas almacenando la con mayor lift
+sorted_normal_TSH_rules_lift <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "lift")[1]
+#Se ordenan las reglas almacenando la con mayor soporte
+sorted_normal_TSH_rules_support <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "support")[1]
+
+#Se muestran la regla con mayor lift
+inspect(sorted_normal_TSH_rules_lift)
+#Se muestran la regla con mayor soporte
+inspect(sorted_normal_TSH_rules_support)
+
+
+# ------------------ Reglas para Edad  --------------------
+# Soporte: 0.2, Tiempo de procesamiento máx 300 [s]
+age_rules = apriori(
+  data = sep_data_factors[1:20],
+  parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("age=Eld","age=Adulthood","age=Youth","age=Infancy"))
+)
+
+#Se ordenan las reglas almacenando la con mayor lift
+sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1:5]
+sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1:5]
+
+# No existen reglas con Youth o Infancy al usar un soporte de 0.01 y 0.8 de confianza.
+# Se explica por la baja cantidad de registros con estos atributos.
+# sorted_youth_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Youth")), decreasing = TRUE, by = "lift")[1:5]
+# sorted_infancy_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Infancy")), decreasing = TRUE, by = "lift")[1:5]
+
+#Se ordenan las reglas almacenando la con mayor soporte
+sorted_eld_age_rules_support <- sort(x = age_rules, decreasing = TRUE, by = "support")[1:5]
+
+#Se muestran la regla con mayor lift
+inspect(sorted_eld_age_rules_lift)
+#Se muestran la regla con mayor soporte
+inspect(sorted_age_rules_support)
+
+
+
+# boxplot.age =  ggboxplot(data =sep_data, x = "class", y = "age", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.age, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.age = insert_yaxis_grob(boxplot.age, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.age)
+# 
+# boxplot.sex =  ggboxplot(data =sep_data, x = "class", y = "sex", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.sex, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.sex = insert_yaxis_grob(boxplot.sex, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.sex)
+# 
+# boxplot.TSH =  ggboxplot(data =sep_data, x = "class", y = "TSH", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.TSH, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.TSH = insert_yaxis_grob(boxplot.TSH, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.TSH)
+# 
+# boxplot.T4U =  ggboxplot(data =sep_data, x = "class", y = "T4U", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.T4U, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.T4U = insert_yaxis_grob(boxplot.T4U, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.T4U)
+# 
+# boxplot.T3 =  ggboxplot(data =sep_data, x = "class", y = "T3", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.T3, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.T3 = insert_yaxis_grob(boxplot.T3, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.T3)
+# 
+# boxplot.FTI =  ggboxplot(data =sep_data, x = "class", y = "FTI", color = "class", add = "jitter") + border() 
+# ydens = axis_canvas(boxplot.FTI, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
+# boxplot.FTI = insert_yaxis_grob(boxplot.FTI, ydens, grid::unit(.2, "null"), position = "right")
+# ggdraw(boxplot.FTI)
 
 #[1] {query_on_thyroxine=f,TSH=Low} => {class=negative} 0.2004515 0.8809524  0.2275395 0.908854 444  
 
