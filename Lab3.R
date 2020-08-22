@@ -1,19 +1,19 @@
-# Librería para leer los datos
+# Librerï¿½a para leer los datos
 library(tidyr)
 
-# Librería para graficar
+# Librerï¿½a para graficar
 library(ggplot2)
 
-# Librería para la moda
+# Librerï¿½a para la moda
 library(modeest)
 
-#Librería de reglas
+#Librerï¿½a de reglas
 library(arulesViz)
 
 library("ggpubr")
 library("cowplot")
 
-cat(" =============================== Laboratorio N°2 Análisis de Datos =============================== \n\n")
+cat(" =============================== Laboratorio Nï¿½3 Anï¿½lisis de Datos =============================== \n\n")
 cat(" Desarrolladores: Patricia Melo - Gustavo Hurtado\n\n")
 
 
@@ -37,10 +37,10 @@ sep_data <- separate(data, col = "V1", into = col_names, sep = ",")
 #======================================================== Funciones =========================================================#
 
 
-# Se genera una función que calcula la media, mediana, moda, desviación standard, mínimo y máximo 
+# Se genera una funciï¿½n que calcula la media, mediana, moda, desviaciï¿½n standard, mï¿½nimo y mï¿½ximo 
 # de una columna perteneciente a un data frame.
 # Recibe una columna de un data frame y el nombre de la columna.
-# Retorna un data frame con la media, mediana, moda, mínimo, máximo y desviación standard de la columna.
+# Retorna un data frame con la media, mediana, moda, mï¿½nimo, mï¿½ximo y desviaciï¿½n standard de la columna.
 get_col_measures <- function(col, name){
   measurements <- data.frame(
     mean = round(mean(col, na.rm = TRUE),3),
@@ -57,10 +57,10 @@ get_col_measures <- function(col, name){
 }
 
 
-# Se genera una función que calcula la media, mediana, moda y desviación standard de todas las columnas de un
-# data frame con valores numéricos contínuos
+# Se genera una funciï¿½n que calcula la media, mediana, moda y desviaciï¿½n standard de todas las columnas de un
+# data frame con valores numï¿½ricos contï¿½nuos
 # Recibe un data frame.
-# Retorna un data frame con la media, mediana, moda y desviación standard de cada columna del data frame.
+# Retorna un data frame con la media, mediana, moda y desviaciï¿½n standard de cada columna del data frame.
 get_all_measures <- function(data_frame){
   total_measurements <- rbind(get_col_measures(data_frame$age,"age"), get_col_measures(data_frame$TSH, "TSH"))
   total_measurements <- rbind(total_measurements, get_col_measures(data_frame$T3, "T3"))
@@ -71,7 +71,7 @@ get_all_measures <- function(data_frame){
 }
 
 
-# Función que calcula las frecuencias de las clases.
+# Funciï¿½n que calcula las frecuencias de las clases.
 # Recibe la columna que contiene las clases.
 # Retorna un data frame con las frecuencias de las clases.
 class_frequency <- function(col, name){
@@ -86,7 +86,7 @@ class_frequency <- function(col, name){
 }
 
 
-# Función que calcula las fecuencias de clases en los primeros 4 cluster.
+# Funciï¿½n que calcula las fecuencias de clases en los primeros 4 cluster.
 # Recibe un dta frame.
 # Retorna un data frame con las fecuencias de las clases en los primeros 4 cluster.
 class_in_cluster_frequency <- function(data){
@@ -98,7 +98,7 @@ class_in_cluster_frequency <- function(data){
 }
 
 
-# Función que calcula la frecuencia de una columna perteneciente a un data frame.
+# Funciï¿½n que calcula la frecuencia de una columna perteneciente a un data frame.
 # Recibe una columna de un data frame y el nombre de la columna.
 # Retorna un data frame con la frecuencia de true y false que se encuentran en la columna.
 get_col_frequency <- function(col, name){
@@ -111,7 +111,7 @@ get_col_frequency <- function(col, name){
 }
 
 
-# Función que calcula la frecuencia de todas las columnas de un data frame con variables discretas.
+# Funciï¿½n que calcula la frecuencia de todas las columnas de un data frame con variables discretas.
 # Recibe un data frame.
 # Retorna un data frame con las frecuencias de true y false de cada columna del data frame.
 get_all_frequency <- function(data_frame){
@@ -133,7 +133,7 @@ get_all_frequency <- function(data_frame){
 }
 
 
-# Función que genera un dataframe con todos los valores normalizados.
+# Funciï¿½n que genera un dataframe con todos los valores normalizados.
 # Recibe una columna del data frame.
 # Entrega un data frame con los valores normalizados de la columna.
 normalize <- function(col, name){
@@ -146,7 +146,7 @@ normalize <- function(col, name){
   return(data_normalized)
 }
 
-# Función que genera un dataframe con todos los valores normalizados de un data frame.
+# Funciï¿½n que genera un dataframe con todos los valores normalizados de un data frame.
 # Recibe un data frame.
 # Entrega un data frame con los valores normalizados de todas las columnas.
 normalize_all <- function(data_frame){
@@ -176,8 +176,8 @@ normalize_all <- function(data_frame){
 
 #======================================= Reconocimiento de datos ==========================================
 
-# Se calcula datos de medida central para cada variable numérica, antes de la limpieza
-# Para esto no se consideran los datos nulos y se crea un data frame para luego utilizar una función.
+# Se calcula datos de medida central para cada variable numï¿½rica, antes de la limpieza
+# Para esto no se consideran los datos nulos y se crea un data frame para luego utilizar una funciï¿½n.
 
 # Edad
 age <- sep_data$age
@@ -220,12 +220,12 @@ datos <- data.frame(
   "FTI" = fti
 )
 
-# Se calcula la media, mediana, moda, mínimo, máximo y desviación estándar
+# Se calcula la media, mediana, moda, mï¿½nimo, mï¿½ximo y desviaciï¿½n estï¿½ndar
 get_all_measures(datos)
 
-# Para variables categóricas se procede a calcular la frecuencia en cada caso
+# Para variables categï¿½ricas se procede a calcular la frecuencia en cada caso
 # Se tiene para sexo: F, M.
-# Resto de variables categóricas: t, f.
+# Resto de variables categï¿½ricas: t, f.
 
 # data frame con variables cualitativas 
 data_cualitative <- data.frame(
@@ -255,50 +255,50 @@ male_quant <- NROW(subset(sex, sex == "M"))
 get_all_frequency(data_cualitative)
 
 
-#====================== Detección y tratamiento de datos faltantes y atípicos =======================#
+#====================== Detecciï¿½n y tratamiento de datos faltantes y atï¿½picos =======================#
 
-# Se quitaron los números al final de la clase (|.232), ya que no se utilizan.
+# Se quitaron los nï¿½meros al final de la clase (|.232), ya que no se utilizan.
 sep_data$class <- vapply(strsplit(sep_data$class,"\\."), `[`, 1, FUN.VALUE=character(1))
 
-# Se obtiene el número total de individuos que se enceuntran en el estudio.
+# Se obtiene el nï¿½mero total de individuos que se enceuntran en el estudio.
 total_individuos <- nrow(sep_data)    # 2800
 
-# Esta variable auxiliar guardará los datos sin modificar
+# Esta variable auxiliar guardarï¿½ los datos sin modificar
 sep_data_aux <- sep_data
 
 
 # -------------------------------------------------------------------
-#                    Disminución de variables 
+#                    Disminuciï¿½n de variables 
 #
 # Se eliminan variables que no entregan un gran aporte al estudio
 
-# Variables numéricas:
-# Dado que TGB medido es siempre falso, se quitará la columna TBG
+# Variables numï¿½ricas:
+# Dado que TGB medido es siempre falso, se quitarï¿½ la columna TBG
 sep_data$TBG <- NULL
 
-# Variables categóricas:
-# Como se eliminó TBG, ya no es necesario TBG measured.
+# Variables categï¿½ricas:
+# Como se eliminï¿½ TBG, ya no es necesario TBG measured.
 sep_data$TBG_measured <- NULL
 
-# Además, al tener valores en el resto de las variables numéricas hace que todas las variables que tengan
-# "measured" no entreguen mayor información, ya que si hay valor entonces el individuo se realizó el examen.
+# Ademï¿½s, al tener valores en el resto de las variables numï¿½ricas hace que todas las variables que tengan
+# "measured" no entreguen mayor informaciï¿½n, ya que si hay valor entonces el individuo se realizï¿½ el examen.
 sep_data$TSH_measured <- NULL
 sep_data$T3_measured <- NULL
 sep_data$TT4_measured <- NULL
 sep_data$T4U_measured <- NULL
 sep_data$FTI_measured <- NULL
 
-# Con el reconocimiento de datos previamente hecho, se vió que la variable hypopituitary no tenía una
-# gran variación en los resultados, donde había 1 verdadero y 2799 falsos, por este motivo se elimina.
+# Con el reconocimiento de datos previamente hecho, se viï¿½ que la variable hypopituitary no tenï¿½a una
+# gran variaciï¿½n en los resultados, donde habï¿½a 1 verdadero y 2799 falsos, por este motivo se elimina.
 sep_data$hypopituitary <- NULL
 
-# Otras variables discretas que no entregan mayor información al estudio con respecto a los calculos son
-# referral source y class, eliminando así a ambas.
+# Otras variables discretas que no entregan mayor informaciï¿½n al estudio con respecto a los calculos son
+# referral source y class, eliminando asï¿½ a ambas.
 sep_data$referral_source<-NULL
 #sep_data$class <- NULL
 
 # -------------------------------------------------------------------
-#             Unión de las clases con muy bajo % de representatividad
+#             Uniï¿½n de las clases con muy bajo % de representatividad
 
 
 sep_data$class[sep_data$class == "T3 toxic"] <- "positive"
@@ -308,13 +308,13 @@ sep_data$class[sep_data$class == "hyperthyroid"] <- "positive"
 
 
 # -------------------------------------------------------------------
-#             Detección  y tratamiento de datos faltantes 
+#             Detecciï¿½n  y tratamiento de datos faltantes 
 #
 # Se encuentran los datos nulos y se ve si es posibles intercambiarlos por la mediana o moda
 
 # Variables continuas:
-# A continuación se obtiene la cantidad de filas restantes que no contienen "?" (nulo)
-# por cada variable númerica encontrada.
+# A continuaciï¿½n se obtiene la cantidad de filas restantes que no contienen "?" (nulo)
+# por cada variable nï¿½merica encontrada.
 
 # Edad
 age <- age[complete.cases(age)]
@@ -336,11 +336,11 @@ fti <- fti[complete.cases(fti)]
 rows_fti <- NROW(fti)             # = 2505
 
 # Para poder reemplazar los datos faltantes por la media, mediana o moda es necesario que dichos datos sean 
-# cercanos al 5% del total de la población.
+# cercanos al 5% del total de la poblaciï¿½n.
 # 140 corresponde al 5% de 2800.
 
-# Comparando los resultados de las filas recién obtenidas, se ve que ninguna variable cumple con dicho requisito, 
-# por eso se decide eliminar las filas del que más pérdida tiene, y así volver a calcular.
+# Comparando los resultados de las filas reciï¿½n obtenidas, se ve que ninguna variable cumple con dicho requisito, 
+# por eso se decide eliminar las filas del que mï¿½s pï¿½rdida tiene, y asï¿½ volver a calcular.
 
 # Eliminando "?" de T3
 sep_data$T3[sep_data$T3 == "?"] <- NA
@@ -416,15 +416,15 @@ sep_data$T3[is.na(sep_data$T3)] <- median(sep_data$T3, na.rm = TRUE)
 
 
 # Variables discretas:
-# La única variable que contiene datos nulos es sexo, por lo que se procede a rellenar con la moda, 
+# La ï¿½nica variable que contiene datos nulos es sexo, por lo que se procede a rellenar con la moda, 
 # la cual es femenino.
 sep_data$sex[sep_data$sex == "?"] <- "F"
 
 
 # -------------------------------------------------------------------
-#             Detección y tratamiento de datos atípicos 
+#             Detecciï¿½n y tratamiento de datos atï¿½picos 
 #
-# Los datos que esten fuera de un rango determinado serán considerados como atípicos y se procederan a 
+# Los datos que esten fuera de un rango determinado serï¿½n considerados como atï¿½picos y se procederan a 
 # intercambiar por la mediana
 
 # Variables continuas:
@@ -456,7 +456,7 @@ sep_data_factors$class <- as.factor(sep_data_factors$class)
 
 
 # -------------------------------------------------------------------
-#             Discretización de los datos
+#             Discretizaciï¿½n de los datos
 
 age = c(0,11,26,59,Inf)
 age.names = c("Infancy","Youth","Adulthood","Eld")
@@ -488,7 +488,7 @@ sep_data_factors$FTI = cut(sep_data_factors$FTI, breaks = FTI, labels = FTI.name
 #                           Reglas 
 
 # ------------------ Reglas para clase positiva --------------------- 
-# Soporte: 0.01, confidence: 0.2 , Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.01, confidence: 0.2 , Tiempo de procesamiento mï¿½x 300 [s]
 positive_rules = apriori(
   data = sep_data_factors,
   parameter=list(support = 0.01,confidence = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
@@ -507,7 +507,7 @@ inspect(sorted_positive_rules_confidence)
 inspect(sorted_positive_rules_support)
 
 # ------------------ Reglas para clase negativa  --------------------
-# Soporte: 0.8, Tiempo de procesamiento máx 5 [s]
+# Soporte: 0.8, Tiempo de procesamiento mï¿½x 5 [s]
 negative_rules = apriori(
   data = sep_data_factors,
   parameter=list(support = 0.8, minlen = 2, maxlen = 20, target="rules"),
@@ -530,7 +530,7 @@ inspect(sorted_negative_rules_increasing_lift)
 # ------------------ Reglas para TSH  --------------------
 
 ############# TSH = Low ############ 
-# Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.001, Tiempo de procesamiento mï¿½x 300 [s]
 low_TSH_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
@@ -548,7 +548,7 @@ inspect(sorted_low_TSH_rules_lift)
 inspect(sorted_low_TSH_rules_support)
 
 ############ TSH = High ############ 
-# Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.001, Tiempo de procesamiento mï¿½x 300 [s]
 high_TSH_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
@@ -566,7 +566,7 @@ inspect(sorted_high_TSH_rules_lift)
 inspect(sorted_high_TSH_rules_support)
 
 ############ TSH = Normal ############ 
-# Soporte: 0.2, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.2, Tiempo de procesamiento mï¿½x 300 [s]
 normal_TSH_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
@@ -585,7 +585,7 @@ inspect(sorted_normal_TSH_rules_support)
 
 
 # ------------------ Reglas para Edad  --------------------
-# Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.01, Tiempo de procesamiento mï¿½x 300 [s]
 age_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
@@ -620,7 +620,7 @@ inspect(sorted_adulthood_age_rules_support)
 
 
 # ------------------ Reglas para Sexo  --------------------
-# Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.01, Tiempo de procesamiento mï¿½x 300 [s]
 sex_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
