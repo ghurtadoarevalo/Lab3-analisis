@@ -585,30 +585,73 @@ inspect(sorted_normal_TSH_rules_support)
 
 
 # ------------------ Reglas para Edad  --------------------
-# Soporte: 0.2, Tiempo de procesamiento máx 300 [s]
+# Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
 age_rules = apriori(
   data = sep_data_factors[1:20],
   parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
   appearance=list(rhs = c("age=Eld","age=Adulthood","age=Youth","age=Infancy"))
 )
 
-#Se ordenan las reglas almacenando la con mayor lift
-sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1:5]
-sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1:5]
+#No existen reglas con soporte min de 0.01 y confianza min de 0.8,para infancia ni juventud
 
-# No existen reglas con Youth o Infancy al usar un soporte de 0.01 y 0.8 de confianza.
-# Se explica por la baja cantidad de registros con estos atributos.
-# sorted_youth_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Youth")), decreasing = TRUE, by = "lift")[1:5]
-# sorted_infancy_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Infancy")), decreasing = TRUE, by = "lift")[1:5]
+#Se ordenan las reglas almacenando la con mayor lift
+sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1]
+sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1]
+
+#Se ordenan las reglas almacenando la con mayor confianza
+sorted_eld_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "confidence")[1]
+sorted_adulthood_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "confidence")[1]
 
 #Se ordenan las reglas almacenando la con mayor soporte
-sorted_eld_age_rules_support <- sort(x = age_rules, decreasing = TRUE, by = "support")[1:5]
+sorted_eld_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "support")[1]
+sorted_adulthood_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "support")[2]
 
 #Se muestran la regla con mayor lift
 inspect(sorted_eld_age_rules_lift)
-#Se muestran la regla con mayor soporte
-inspect(sorted_age_rules_support)
+inspect(sorted_adulthood_age_rules_lift)
 
+#Se muestran la regla con mayor soporte
+inspect(sorted_eld_age_rules_confidence)
+inspect(sorted_adulthood_age_rules_confidence)
+
+#Se muestran la regla con mayor soporte
+inspect(sorted_eld_age_rules_support)
+inspect(sorted_adulthood_age_rules_support)
+
+
+# ------------------ Reglas para Sexo  --------------------
+# Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
+sex_rules = apriori(
+  data = sep_data_factors[1:20],
+  parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("sex=F","sex=M"))
+)
+
+#No existen reglas con soporte min de 0.01 y confianza min de 0.8,para infancia ni juventud
+
+#Se ordenan las reglas almacenando la con mayor lift
+sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1]
+sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1]
+
+#Se ordenan las reglas almacenando la con mayor confianza
+sorted_eld_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "confidence")[1]
+sorted_adulthood_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "confidence")[1]
+
+#Se ordenan las reglas almacenando la con mayor soporte
+sorted_eld_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "support")[1]
+sorted_adulthood_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "support")[2]
+
+#Se muestran la regla con mayor lift
+inspect(sorted_eld_age_rules_lift)
+inspect(sorted_adulthood_age_rules_lift)
+
+#Se muestran la regla con mayor soporte
+inspect(sorted_eld_age_rules_confidence)
+inspect(sorted_adulthood_age_rules_confidence)
+
+#Se muestran la regla con mayor soporte
+inspect(sorted_eld_age_rules_support)
+inspect(sorted_adulthood_age_rules_support)
 
 
 # boxplot.age =  ggboxplot(data =sep_data, x = "class", y = "age", color = "class", add = "jitter") + border() 
