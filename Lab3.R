@@ -491,7 +491,7 @@ sep_data_factors$FTI = cut(sep_data_factors$FTI, breaks = FTI, labels = FTI.name
 # Soporte: 0.01, confidence: 0.2 , Tiempo de procesamiento máx 300 [s]
 positive_rules = apriori(
   data = sep_data_factors,
-  parameter=list(support = 0.01,confidence = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  parameter=list(support = 0.01,confidence = 0.2,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
   appearance=list(rhs = c("class=positive"))
 )
 
@@ -499,18 +499,22 @@ positive_rules = apriori(
 sorted_positive_rules_confidence <- sort(x = positive_rules, decreasing = TRUE, by = "confidence")[1]
 #Se obtiene la regla con mayor soporte
 sorted_positive_rules_support <- sort(x = positive_rules, decreasing = TRUE, by = "support")[1]
+#Se obtiene la regla con mayor lift
+sorted_positive_rules_lift <- sort(x = positive_rules, decreasing = TRUE, by = "lift")[1]
 
 
 #Se muestran la regla con mayor confianza
 inspect(sorted_positive_rules_confidence)
 #Se muestran la regla con mayor soporte
 inspect(sorted_positive_rules_support)
+#Se muestran la regla con mayor lift
+inspect(sorted_positive_rules_lift)
 
 # ------------------ Reglas para clase negativa  --------------------
 # Soporte: 0.8, Tiempo de procesamiento máx 5 [s]
 negative_rules = apriori(
   data = sep_data_factors,
-  parameter=list(support = 0.8, minlen = 2, maxlen = 20, target="rules"),
+  parameter=list(support = 0.8, minlen = 3, maxlen = 20, target="rules"),
   appearance=list(rhs = c("class=negative"))
   
 )
@@ -526,14 +530,13 @@ inspect(sorted_negative_rules_decreasing_lift)
 inspect(sorted_negative_rules_increasing_lift)
 
 
-
 # ------------------ Reglas para TSH  --------------------
 
 ############# TSH = Low ############ 
 # Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
 low_TSH_rules = apriori(
   data = sep_data_factors[1:20],
-  parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  parameter=list(support = 0.001,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
   appearance=list(rhs = c("TSH=Low"))
 )
 
@@ -551,7 +554,7 @@ inspect(sorted_low_TSH_rules_support)
 # Soporte: 0.001, Tiempo de procesamiento máx 300 [s]
 high_TSH_rules = apriori(
   data = sep_data_factors[1:20],
-  parameter=list(support = 0.001,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  parameter=list(support = 0.001,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
   appearance=list(rhs = c("TSH=High"))
 )
 
@@ -567,28 +570,28 @@ inspect(sorted_high_TSH_rules_support)
 
 ############ TSH = Normal ############ 
 # Soporte: 0.2, Tiempo de procesamiento máx 300 [s]
-normal_TSH_rules = apriori(
-  data = sep_data_factors[1:20],
-  parameter=list(support = 0.2,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
-  appearance=list(rhs = c("TSH=Normal"))
-)
-
-#Se ordenan las reglas almacenando la con mayor lift
-sorted_normal_TSH_rules_lift <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "lift")[1]
-#Se ordenan las reglas almacenando la con mayor soporte
-sorted_normal_TSH_rules_support <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "support")[1]
-
-#Se muestran la regla con mayor lift
-inspect(sorted_normal_TSH_rules_lift)
-#Se muestran la regla con mayor soporte
-inspect(sorted_normal_TSH_rules_support)
+# normal_TSH_rules = apriori(
+#   data = sep_data_factors[1:20],
+#   parameter=list(support = 0.2,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
+#   appearance=list(rhs = c("TSH=Normal"))
+# )
+# 
+# #Se ordenan las reglas almacenando la con mayor lift
+# sorted_normal_TSH_rules_lift <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "lift")[1]
+# #Se ordenan las reglas almacenando la con mayor soporte
+# sorted_normal_TSH_rules_support <- sort(x = normal_TSH_rules, decreasing = TRUE, by = "support")[1]
+# 
+# #Se muestran la regla con mayor lift
+# inspect(sorted_normal_TSH_rules_lift)
+# #Se muestran la regla con mayor soporte
+# inspect(sorted_normal_TSH_rules_support)
 
 
 # ------------------ Reglas para Edad  --------------------
 # Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
 age_rules = apriori(
   data = sep_data_factors[1:20],
-  parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
+  parameter=list(support = 0.01,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
   appearance=list(rhs = c("age=Eld","age=Adulthood","age=Youth","age=Infancy"))
 )
 
@@ -597,62 +600,45 @@ age_rules = apriori(
 #Se ordenan las reglas almacenando la con mayor lift
 sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1]
 sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1]
-
 #Se ordenan las reglas almacenando la con mayor confianza
 sorted_eld_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "confidence")[1]
 sorted_adulthood_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "confidence")[1]
-
 #Se ordenan las reglas almacenando la con mayor soporte
 sorted_eld_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "support")[1]
 sorted_adulthood_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "support")[2]
 
-#Se muestran la regla con mayor lift
+#Se muestra la regla con mayor lift
 inspect(sorted_eld_age_rules_lift)
 inspect(sorted_adulthood_age_rules_lift)
-
-#Se muestran la regla con mayor soporte
+#Se muestra la regla con mayor confianza
 inspect(sorted_eld_age_rules_confidence)
 inspect(sorted_adulthood_age_rules_confidence)
-
-#Se muestran la regla con mayor soporte
+#Se muestra la regla con mayor soporte
 inspect(sorted_eld_age_rules_support)
 inspect(sorted_adulthood_age_rules_support)
 
-
-# ------------------ Reglas para Sexo  --------------------
+# ------------------ Reglas hormonas  --------------------
 # Soporte: 0.01, Tiempo de procesamiento máx 300 [s]
-sex_rules = apriori(
+hormones_rules = apriori(
   data = sep_data_factors[1:20],
-  parameter=list(support = 0.01,maxtime = 300, minlen = 2, maxlen = 20, target="rules"),
-  appearance=list(rhs = c("sex=F","sex=M"))
+  parameter=list(support = 0.01,maxtime = 300, minlen = 3, maxlen = 20, target="rules"),
+  appearance=list(rhs = c("T4U=Low","T4U=High","T3=Low","T3=High","TT4=Low","TT4=High","FTI=Low","FTI=High"))
 )
 
-#No existen reglas con soporte min de 0.01 y confianza min de 0.8,para infancia ni juventud
-
 #Se ordenan las reglas almacenando la con mayor lift
-sorted_eld_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "lift")[1]
-sorted_adulthood_age_rules_lift <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "lift")[1]
-
-#Se ordenan las reglas almacenando la con mayor confianza
-sorted_eld_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "confidence")[1]
-sorted_adulthood_age_rules_confidence <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "confidence")[1]
-
+sorted_hormones_rules_lift <- sort(x = hormones_rules , decreasing = TRUE, by = "lift")[2]
 #Se ordenan las reglas almacenando la con mayor soporte
-sorted_eld_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Eld")), decreasing = TRUE, by = "support")[1]
-sorted_adulthood_age_rules_support <- sort(x = subset(x = age_rules, rhs %ain% c("age=Adulthood")), decreasing = TRUE, by = "support")[2]
+sorted_hormones_rules_support <- sort(x = hormones_rules , decreasing = TRUE, by = "support")[1]
+#Se ordenan las reglas almacenando la con mayor confianza
+sorted_hormones_rules_confidence <- sort(x = hormones_rules , decreasing = TRUE, by = "confidence")[2]
 
-#Se muestran la regla con mayor lift
-inspect(sorted_eld_age_rules_lift)
-inspect(sorted_adulthood_age_rules_lift)
 
-#Se muestran la regla con mayor soporte
-inspect(sorted_eld_age_rules_confidence)
-inspect(sorted_adulthood_age_rules_confidence)
-
-#Se muestran la regla con mayor soporte
-inspect(sorted_eld_age_rules_support)
-inspect(sorted_adulthood_age_rules_support)
-
+#Se muestra la regla con mayor lift
+inspect(sorted_hormones_rules_lift)
+#Se muestra la regla con mayor soporte
+inspect(sorted_hormones_rules_support)
+#Se muestra la regla con mayor confianza
+inspect(sorted_hormones_rules_confidence)
 
 # boxplot.age =  ggboxplot(data =sep_data, x = "class", y = "age", color = "class", add = "jitter") + border() 
 # ydens = axis_canvas(boxplot.age, axis = "y", coord_flip = TRUE) + geom_density(data = sep_data, aes(x = area, fill = class), alpha = 0.7, size = 0.2) + coord_flip()
