@@ -541,9 +541,9 @@ low_TSH_rules = apriori(
 )
 
 #Se ordenan las reglas almacenando las 5 con mayor lift
-sorted_low_TSH_rules_lift <- sort(x = low_TSH_rules, decreasing = TRUE, by = "lift")[1:5]
+sorted_low_TSH_rules_lift <- sort(x = low_TSH_rules, decreasing = TRUE, by = "lift")[2:4]
 #Se ordenan las reglas almacenando las 5 con mayor soporte
-sorted_low_TSH_rules_support <- sort(x = low_TSH_rules, decreasing = TRUE, by = "support")[1:5]
+sorted_low_TSH_rules_support <- sort(x = low_TSH_rules, decreasing = TRUE, by = "support")[1]
 
 #Se muestran las 5 reglas con mayor lift
 inspect(sorted_low_TSH_rules_lift)
